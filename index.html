@@ -85,14 +85,14 @@
   .hero-date svg{width:18px;height:18px;color:var(--malachite)}
   /* fotka speakera – pruh na celú šírku s plynulým prechodom (fade) */
   .hero-photo{position:relative;width:100%;margin:14px 0 2px;
-    height:clamp(330px,58vh,540px);overflow:hidden;
-    -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 14%,#000 58%,transparent 99%);
-    mask-image:linear-gradient(to bottom,transparent 0,#000 14%,#000 58%,transparent 99%)}
+    height:clamp(340px,60vh,560px);overflow:hidden;
+    -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 7%,#000 60%,transparent 99%);
+    mask-image:linear-gradient(to bottom,transparent 0,#000 7%,#000 60%,transparent 99%)}
   /* Postava vycentrovaná horizontálne, vertikálne priorita hlava/tvár/trup.
      Desktop a mobil majú vlastné object-position, aby sa neorezávala hlava. */
-  .hero-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 16%}
-  @media(max-width:620px){.hero-photo img{object-position:50% 30%}}
-  @media(min-width:620px){.hero-photo{height:520px}}
+  .hero-photo img{width:100%;height:100%;object-fit:cover;object-position:50% 6%}
+  @media(max-width:620px){.hero-photo img{object-position:50% 18%}}
+  @media(min-width:620px){.hero-photo{height:560px}}
   .photo-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
     color:var(--mint-dim);text-align:center;font-size:.82rem;font-weight:600;padding:14px}
   .photo-ph svg{width:34px;height:34px;opacity:.7}
