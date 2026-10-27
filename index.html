@@ -291,6 +291,26 @@
   .rv{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
   .rv.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+
+  /* ====== Cookie lišta (informatívna) ====== */
+  .cookie-bar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%) translateY(140%);
+    z-index:120;width:calc(100% - 32px);max-width:620px;
+    background:var(--green-card);color:var(--mint);border:1px solid rgba(60,214,78,.3);
+    border-radius:16px;padding:18px 20px;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;gap:14px;
+    opacity:0;visibility:hidden;transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .45s}
+  .cookie-bar.show{transform:translateX(-50%) translateY(0);opacity:1;visibility:visible}
+  .cookie-bar p{margin:0;font-size:var(--fs-help);line-height:var(--lh-help);max-width:none}
+  .cookie-bar a{color:var(--malachite);font-weight:var(--fw-semi);text-decoration:underline}
+  .cookie-bar .cookie-btn{align-self:stretch;cursor:pointer;border:none;
+    font-family:var(--ff);font-weight:var(--fw-bold);font-size:var(--fs-cta);text-transform:uppercase;letter-spacing:.01em;
+    padding:.8em 1.6em;border-radius:999px;background:var(--malachite);color:var(--ink);
+    transition:transform .18s,background .18s}
+  .cookie-bar .cookie-btn:hover{background:#46e85a;transform:translateY(-1px)}
+  @media(min-width:560px){
+    .cookie-bar{flex-direction:row;align-items:center;gap:18px}
+    .cookie-bar .cookie-btn{align-self:auto;flex:none;white-space:nowrap}
+  }
 </style>
 </head>
 <body>
@@ -545,6 +565,12 @@
   </div>
 </footer>
 
+<!-- ====== Cookie lišta ====== -->
+<div class="cookie-bar" id="cookie-bar" role="dialog" aria-live="polite" aria-label="Oznámenie o cookies">
+  <p>Táto stránka používa nevyhnutné cookies potrebné na jej správne fungovanie. Viac v <a href="https://www.towerfinance.sk/clanky/cookies" target="_blank" rel="noopener">Zásadách používania cookies</a>.</p>
+  <button type="button" class="cookie-btn" id="cookie-ok">Rozumiem</button>
+</div>
+
 <script>
 /* =====================================================
    1) DÁTUM WEBINÁRA pre countdown — uprav podľa potreby
@@ -622,6 +648,28 @@ document.querySelectorAll('.reg-form').forEach(form=>{
     }
   });
 });
+
+/* =====================================================
+   Cookie lišta — informatívna, zobrazí sa raz, voľba sa uloží
+   ===================================================== */
+(function(){
+  var KEY='tf-cookie-ok';
+  var bar=document.getElementById('cookie-bar');
+  if(!bar) return;
+  var stored=null;
+  try{ stored=localStorage.getItem(KEY); }catch(e){}
+  if(!stored){
+    // malé oneskorenie, nech lišta plynule nabehne po načítaní
+    setTimeout(function(){ bar.classList.add('show'); }, 600);
+  }
+  var btn=document.getElementById('cookie-ok');
+  if(btn){
+    btn.addEventListener('click',function(){
+      bar.classList.remove('show');
+      try{ localStorage.setItem(KEY,'1'); }catch(e){}
+    });
+  }
+})();
 </script>
 </body>
 </html>
