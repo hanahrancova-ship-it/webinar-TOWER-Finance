@@ -98,18 +98,22 @@
   @media(min-width:620px){.nav-cta{display:inline-flex;width:auto;font-size:.86rem;padding:.7em 1.4em}}
 
   /* ====== HERO ====== */
-  .hero{position:relative;padding:34px 0 44px;overflow:hidden;
+  /* ===== HERO celok: obsah + countdown v jednej prvej obrazovke (svh) ===== */
+  .hero-unit{display:flex;flex-direction:column}
+  @media(max-width:720px){.hero-unit{min-height:calc(100svh - 64px)}}
+  .hero{position:relative;flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;
+    padding:clamp(14px,3.2vh,30px) 0;overflow:hidden;
     background:radial-gradient(1100px 700px at 50% -10%,rgba(60,214,78,.16),transparent 60%),var(--ink)}
   .hero-stairs{position:absolute;right:-30px;bottom:-10px;width:min(380px,60%);opacity:.14;color:var(--malachite);pointer-events:none}
   .hero-inner{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center}
-  .badge{display:inline-flex;align-items:center;gap:.6em;background:rgba(60,214,78,.14);border:1px solid rgba(60,214,78,.4);
-    color:var(--malachite);font-weight:700;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;
-    padding:.6em 1.1em;border-radius:999px;margin-bottom:22px}
-  .badge .live{width:8px;height:8px;border-radius:50%;background:var(--malachite);box-shadow:0 0 0 0 rgba(60,214,78,.6);animation:live 1.8s infinite}
+  /* Označenie webinára ako jednoduchý textový riadok (bez pill/pozadia/borderu) */
+  .badge{display:inline;background:none;border:none;padding:0;
+    color:var(--malachite);font-weight:var(--fw-bold);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase}
+  .badge .live{display:inline-block;width:7px;height:7px;border-radius:50%;vertical-align:middle;margin-right:.5em;background:var(--malachite);box-shadow:0 0 0 0 rgba(60,214,78,.6);animation:live 1.8s infinite}
   @keyframes live{0%{box-shadow:0 0 0 0 rgba(60,214,78,.55)}70%{box-shadow:0 0 0 8px rgba(60,214,78,0)}100%{box-shadow:0 0 0 0 rgba(60,214,78,0)}}
 
-  .badge-wrap{text-align:center;position:relative;z-index:1}
-  .hero-date{display:inline-flex;align-items:center;gap:.5em;margin-top:14px;color:var(--mint);font-weight:700;font-size:1.05rem}
+  .badge-wrap{text-align:center;position:relative;z-index:1;margin-bottom:clamp(10px,2vh,18px)}
+  .hero-date{display:flex;justify-content:center;align-items:center;gap:.5em;margin-top:clamp(6px,1.4vh,10px);color:var(--mint);font-weight:var(--fw-bold);font-size:1rem}
   .hero-date svg{width:18px;height:18px;color:var(--malachite)}
   /* fotka speakera – pruh na celú šírku s plynulým prechodom (fade) */
   .hero-photo{position:relative;width:100%;margin:0 0 30px;
@@ -125,26 +129,26 @@
     color:var(--mint-dim);text-align:center;font-size:.82rem;font-weight:600;padding:14px}
   .photo-ph svg{width:34px;height:34px;opacity:.7}
 
-  .hero h1{font-size:var(--fs-h1);max-width:18ch}
+  .hero h1{font-size:var(--fs-h1);max-width:18ch;margin:0}
   .hero .lead{font-size:clamp(1.05rem,2.4vw,1.32rem);color:var(--mint);max-width:46ch;margin:18px auto 0;font-weight:500}
   .hero .lead strong{color:var(--white);font-weight:700}
-  .hero .desc{font-size:var(--fs-body);color:var(--mint-dim);max-width:52ch;margin:16px auto 0}
-  .hero .cta-wrap{margin-top:30px;width:100%;max-width:440px;text-align:center}
+  .hero .desc{font-size:var(--fs-body);color:var(--mint-dim);max-width:52ch;margin:clamp(8px,1.6vh,14px) auto 0}
+  .hero .cta-wrap{margin-top:clamp(16px,2.6vh,26px);width:100%;max-width:440px;text-align:center}
   .hero .scarcity{font-size:.9rem;color:var(--mint-dim);margin-top:14px;font-weight:600}
 
   /* ====== INFO + COUNTDOWN ====== */
-  .info{background:var(--bone);color:var(--ink);padding:32px 0}
+  .info{background:var(--bone);color:var(--ink);padding:clamp(14px,2.4vh,22px) 0;flex:0 0 auto}
   .info-grid{display:flex;flex-direction:column;gap:14px;align-items:center}
   .info-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
   .ichip{display:inline-flex;align-items:center;gap:.55em;background:var(--white);border:1px solid var(--line-l);
     border-radius:12px;padding:.7em 1.1em;font-weight:700;font-size:.96rem;box-shadow:var(--shadow-l)}
   .ichip svg{width:19px;height:19px;color:var(--malachite-deep)}
-  .countdown{display:flex;gap:8px;justify-content:center;margin-top:6px}
-  .cd-box{background:var(--ink);color:var(--white);border-radius:14px;min-width:68px;padding:12px 8px;text-align:center}
-  .cd-box b{font-family:'Archivo',sans-serif;font-size:1.9rem;line-height:1;display:block;color:var(--malachite)}
-  .cd-box span{font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mint-dim);margin-top:5px;display:block;font-weight:700}
-  .cd-sep{align-self:center;font-family:'Archivo',sans-serif;font-size:1.4rem;color:var(--malachite);opacity:.6}
-  @media(min-width:620px){.info-grid{flex-direction:row;justify-content:center}.cd-box{min-width:80px}.cd-box b{font-size:2.3rem}}
+  .countdown{display:flex;gap:6px;justify-content:center;margin-top:0}
+  .cd-box{background:var(--ink);color:var(--white);border-radius:12px;min-width:58px;padding:9px 6px;text-align:center}
+  .cd-box b{font-family:var(--ff);font-weight:var(--fw-bold);font-size:1.65rem;line-height:1;display:block;color:var(--malachite)}
+  .cd-box span{font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mint-dim);margin-top:3px;display:block;font-weight:var(--fw-bold)}
+  .cd-sep{align-self:center;font-family:var(--ff);font-weight:var(--fw-bold);font-size:1.2rem;color:var(--malachite);opacity:.6}
+  @media(min-width:620px){.info-grid{flex-direction:row;justify-content:center}.cd-box{min-width:76px}.cd-box b{font-size:2.1rem}}
 
   /* ====== Sekcie ====== */
   section{position:relative}
@@ -303,6 +307,7 @@
 <main id="top">
 
   <!-- ============ HERO ============ -->
+  <div class="hero-unit">
   <section class="hero">
     <svg class="hero-stairs" viewBox="0 0 440 360" fill="none" aria-hidden="true">
       <path d="M16 350 V292 H92 V234 H168 V176 H244 V118 H320 V60 H396 V350 Z" fill="currentColor" fill-opacity=".18"/>
@@ -340,6 +345,7 @@
       </div>
     </div>
   </section>
+  </div><!-- /hero-unit -->
 
   <!-- ============ PROBLÉM ============ -->
   <section class="pad sec-dark" style="padding-top:26px">
