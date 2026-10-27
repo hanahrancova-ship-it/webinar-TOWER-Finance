@@ -99,8 +99,7 @@
 
   /* ====== HERO ====== */
   /* ===== HERO celok: obsah + countdown v jednej prvej obrazovke (svh) ===== */
-  .hero-unit{display:flex;flex-direction:column}
-  @media(max-width:720px){.hero-unit{min-height:calc(100svh - 64px)}}
+  .hero-unit{display:flex;flex-direction:column;min-height:calc(100svh - 64px)}
   .hero{position:relative;flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;
     padding:clamp(14px,3.2vh,30px) 0;overflow:hidden;
     background:radial-gradient(1100px 700px at 50% -10%,rgba(60,214,78,.16),transparent 60%),var(--ink)}
