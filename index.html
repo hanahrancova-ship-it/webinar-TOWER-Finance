@@ -302,14 +302,18 @@
   .cookie-bar.show{transform:translateX(-50%) translateY(0);opacity:1;visibility:visible}
   .cookie-bar p{margin:0;font-size:var(--fs-help);line-height:var(--lh-help);max-width:none}
   .cookie-bar a{color:var(--malachite);font-weight:var(--fw-semi);text-decoration:underline}
-  .cookie-bar .cookie-btn{align-self:stretch;cursor:pointer;border:none;
+  .cookie-bar .cookie-actions{display:flex;flex-direction:column;gap:10px}
+  .cookie-bar .cookie-btn{cursor:pointer;border:none;
     font-family:var(--ff);font-weight:var(--fw-bold);font-size:var(--fs-cta);text-transform:uppercase;letter-spacing:.01em;
-    padding:.8em 1.6em;border-radius:999px;background:var(--malachite);color:var(--ink);
-    transition:transform .18s,background .18s}
-  .cookie-bar .cookie-btn:hover{background:#46e85a;transform:translateY(-1px)}
+    padding:.75em 1.4em;border-radius:999px;transition:transform .18s,background .18s,border-color .18s,color .18s}
+  .cookie-bar .cookie-accept{background:var(--malachite);color:var(--ink)}
+  .cookie-bar .cookie-accept:hover{background:#46e85a;transform:translateY(-1px)}
+  .cookie-bar .cookie-reject{background:transparent;color:var(--mint);border:1.5px solid rgba(60,214,78,.45)}
+  .cookie-bar .cookie-reject:hover{border-color:var(--malachite);color:#fff}
   @media(min-width:560px){
     .cookie-bar{flex-direction:row;align-items:center;gap:18px}
-    .cookie-bar .cookie-btn{align-self:auto;flex:none;white-space:nowrap}
+    .cookie-bar .cookie-actions{flex-direction:row;flex:none}
+    .cookie-bar .cookie-btn{white-space:nowrap}
   }
 </style>
 </head>
@@ -566,9 +570,12 @@
 </footer>
 
 <!-- ====== Cookie lišta ====== -->
-<div class="cookie-bar" id="cookie-bar" role="dialog" aria-live="polite" aria-label="Oznámenie o cookies">
-  <p>Táto stránka používa nevyhnutné cookies potrebné na jej správne fungovanie. Viac v <a href="https://www.towerfinance.sk/clanky/cookies" target="_blank" rel="noopener">Zásadách používania cookies</a>.</p>
-  <button type="button" class="cookie-btn" id="cookie-ok">Rozumiem</button>
+<div class="cookie-bar" id="cookie-bar" role="dialog" aria-live="polite" aria-label="Nastavenia cookies">
+  <p>Používame nevyhnutné cookies na správne fungovanie stránky a — s tvojím súhlasom — marketingové cookies (Meta Pixel) na meranie návštevnosti a registrácií. Viac v <a href="https://www.towerfinance.sk/clanky/cookies" target="_blank" rel="noopener">Zásadách používania cookies</a>.</p>
+  <div class="cookie-actions">
+    <button type="button" class="cookie-btn cookie-reject" id="cookie-reject">Nesúhlasím</button>
+    <button type="button" class="cookie-btn cookie-accept" id="cookie-accept">Súhlasím</button>
+  </div>
 </div>
 
 <script>
@@ -642,6 +649,7 @@ document.querySelectorAll('.reg-form').forEach(form=>{
       form.style.display='none';
       card.querySelector('.reg-success').classList.add('show');
       card.scrollIntoView({behavior:'smooth',block:'center'});
+      if(window.tfTrackLead) window.tfTrackLead();   // Meta Pixel: event Lead (len so súhlasom)
     }catch(err){
       btn.disabled=false; btn.textContent=orig;
       alert('Registráciu sa nepodarilo odoslať. Skús to, prosím, znova.');
@@ -650,25 +658,52 @@ document.querySelectorAll('.reg-form').forEach(form=>{
 });
 
 /* =====================================================
-   Cookie lišta — informatívna, zobrazí sa raz, voľba sa uloží
+   Súhlas s cookies + Meta Pixel
+   - Pixel (marketing) sa načíta LEN po súhlase ("Súhlasím").
+   - Pri "Nesúhlasím" sa nenačíta.
+   - Registrácia sa meria ako event "Lead" (len ak je súhlas).
    ===================================================== */
 (function(){
-  var KEY='tf-cookie-ok';
+  var KEY='tf-cookie-consent';       // 'granted' | 'denied'
+  var PIXEL_ID='1869620907210495';
+  var pixelLoaded=false;
+
+  function getConsent(){ try{ return localStorage.getItem(KEY); }catch(e){ return null; } }
+  function setConsent(v){ try{ localStorage.setItem(KEY,v); }catch(e){} }
+
+  function loadPixel(){
+    if(pixelLoaded) return; pixelLoaded=true;
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+    (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', PIXEL_ID);
+    fbq('track','PageView');
+  }
+
+  // Meranie registrácie — volá sa z formulára po úspešnom odoslaní
+  window.tfTrackLead=function(){
+    if(window.fbq && getConsent()==='granted'){ fbq('track','Lead'); }
+  };
+
   var bar=document.getElementById('cookie-bar');
-  if(!bar) return;
-  var stored=null;
-  try{ stored=localStorage.getItem(KEY); }catch(e){}
-  if(!stored){
-    // malé oneskorenie, nech lišta plynule nabehne po načítaní
-    setTimeout(function(){ bar.classList.add('show'); }, 600);
+  var consent=getConsent();
+
+  if(consent==='granted'){
+    loadPixel();                                  // súhlas už bol udelený skôr
+  } else if(!consent && bar){
+    setTimeout(function(){ bar.classList.add('show'); }, 600);  // ešte sa nerozhodol
   }
-  var btn=document.getElementById('cookie-ok');
-  if(btn){
-    btn.addEventListener('click',function(){
-      bar.classList.remove('show');
-      try{ localStorage.setItem(KEY,'1'); }catch(e){}
-    });
-  }
+
+  var acc=document.getElementById('cookie-accept');
+  var rej=document.getElementById('cookie-reject');
+  if(acc) acc.addEventListener('click',function(){
+    setConsent('granted'); if(bar) bar.classList.remove('show'); loadPixel();
+  });
+  if(rej) rej.addEventListener('click',function(){
+    setConsent('denied'); if(bar) bar.classList.remove('show');
+  });
 })();
 </script>
 </body>
