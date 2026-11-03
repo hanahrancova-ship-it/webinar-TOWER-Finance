@@ -649,7 +649,7 @@ document.querySelectorAll('.reg-form').forEach(form=>{
       form.style.display='none';
       card.querySelector('.reg-success').classList.add('show');
       card.scrollIntoView({behavior:'smooth',block:'center'});
-      if(window.tfTrackLead) window.tfTrackLead();   // Meta Pixel: event Lead (len so súhlasom)
+      if(window.tfTrackRegistration) window.tfTrackRegistration();   // Meta Pixel: CompleteRegistration (po úspechu, len so súhlasom)
     }catch(err){
       btn.disabled=false; btn.textContent=orig;
       alert('Registráciu sa nepodarilo odoslať. Skús to, prosím, znova.');
@@ -658,14 +658,14 @@ document.querySelectorAll('.reg-form').forEach(form=>{
 });
 
 /* =====================================================
-   Súhlas s cookies + Meta Pixel
+   Súhlas s cookies + Meta Pixel (dataset: TOWER Finance | Webináre)
    - Pixel (marketing) sa načíta LEN po súhlase ("Súhlasím").
    - Pri "Nesúhlasím" sa nenačíta.
-   - Registrácia sa meria ako event "Lead" (len ak je súhlas).
+   - Úspešná registrácia sa meria ako event "CompleteRegistration" (len so súhlasom).
    ===================================================== */
 (function(){
   var KEY='tf-cookie-consent';       // 'granted' | 'denied'
-  var PIXEL_ID='1869620907210495';
+  var PIXEL_ID='1796133194773294';
   var pixelLoaded=false;
 
   function getConsent(){ try{ return localStorage.getItem(KEY); }catch(e){ return null; } }
@@ -682,9 +682,10 @@ document.querySelectorAll('.reg-form').forEach(form=>{
     fbq('track','PageView');
   }
 
-  // Meranie registrácie — volá sa z formulára po úspešnom odoslaní
-  window.tfTrackLead=function(){
-    if(window.fbq && getConsent()==='granted'){ fbq('track','Lead'); }
+  // Meranie úspešnej registrácie — volá sa z formulára až po potvrdenom úspechu.
+  // Bez osobných údajov (žiadne meno/e-mail/telefón v parametroch). 1 úspech = 1 event.
+  window.tfTrackRegistration=function(){
+    if(window.fbq && getConsent()==='granted'){ fbq('track','CompleteRegistration'); }
   };
 
   var bar=document.getElementById('cookie-bar');
